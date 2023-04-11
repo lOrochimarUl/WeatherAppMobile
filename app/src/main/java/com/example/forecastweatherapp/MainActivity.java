@@ -6,13 +6,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
+
+import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
+
+import current_weather.Sys;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,67 +30,49 @@ public class MainActivity extends AppCompatActivity {
     private TextView view_forecast;
     private String APIkey_OPW = new String();
     private File file;
-
+    private String response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-/*
-        file = new File("C:\\Users\\User\\AndroidStudioProjects\\ForecastWeatherApp\\app\\src\\main\\res\\APIkey.txt");
-        BufferedReader r = null;
-        try {
-            r = new BufferedReader(new FileReader(file.getAbsolutePath()));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            String scores = r.readLine();
-            APIkey_OPW = r.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        //file = new File("C:\\Users\\User\\AndroidStudioProjects\\ForecastWeatherApp\\app\\src\\main\\res\\APIkey.txt");
-
-
-        try (FileReader reader = new FileReader(new File(getFilesDir(), "com/example/forecastweatherapp/APIkey.txt")))
+        //Get APIkey
+        file = new File(getFilesDir(), "APIkey.txt");
+        try (FileReader reader = new FileReader(file))
         {
             char[] chars = new char[(int) file.length()];
             reader.read(chars);
-
             APIkey_OPW = new String(chars);
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-      */
 
-        try(FileReader reader = new FileReader("APIkey.txt"))
-        {
-            int c;
-            while((c=reader.read())!=-1)
-            {
-                System.out.print((char)c);
+        //Thread description where I send a request and get JSON-response
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request
+                        .Builder()
+                        .url("https://api.openweathermap.org/data/2.5/weather?q=Budënnovsk&lang=ru&units=metric&appid=" + APIkey_OPW)
+                        .build();
+                try {
+                    response = client.newCall(request).execute().body().string();
+                    System.out.println(response);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }
-        catch (IOException ex){
-            System.out.println(ex.getMessage());
-        }
-        System.out.println(APIkey_OPW);
+        };
+        Thread thread = new Thread(runnable);
 
+        //Start thread;
+        thread.start();
 
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request
-                .Builder()
-                .url("https://api.openweathermap.org/data/2.5/weather?q=Budënnovsk&lang=ru&units=metric&appid=" + APIkey_OPW)
-                .build();
-        try {
-            Response response = client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
 
         get_owm_forecast = findViewById(R.id.get_owm_forecast);
