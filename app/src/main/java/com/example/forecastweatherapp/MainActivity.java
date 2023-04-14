@@ -16,12 +16,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 
+import jsonparsing.GsonParser;
+import current_weather.Root;
 import current_weather.Sys;
 
 public class MainActivity extends AppCompatActivity {
@@ -73,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
         //Start thread;
         thread.start();
 
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        GsonParser parser = new GsonParser();
+        Root root = parser.parse_current_weather(response);
 
 
         get_owm_forecast = findViewById(R.id.get_owm_forecast);
@@ -81,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         get_owm_forecast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                view_forecast.setText(response);
             }
         });
 
