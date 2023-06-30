@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Forecast Weather App</string>
     <string name="main_header">Анализатор прогнозов погоды</string>
-    <string name="get_forecast">Получить прогноз погоды от OWM</string>
-    <string name="view_forecast">Прогноз погоды от OWM</string>
+    <string name="save_APIkey">Сохранить API-ключ</string>
+    <string name="hint_APIkey">Введите API-ключ</string>
+    <string name="ready">Готово</string>
+    <string name="get_forecast">Получить прогноз погоды</string>
 </resources>

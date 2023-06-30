@@ -27,10 +27,12 @@ import jsonparsing.GsonParser;
 import current_weather.Root;
 import current_weather.Sys;
 
+import java.sql.*;
+
 public class MainActivity extends AppCompatActivity {
 
-    private Button get_owm_forecast;
-    private TextView view_forecast;
+    private Button save_APIkey;
+    private TextView userAPIkey;
     private String APIkey_OPW = new String();
     private File file;
     private String response;
@@ -40,23 +42,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Get APIkey
-        file = new File(getFilesDir(), "APIkey.txt");
-        try (FileReader reader = new FileReader(file))
-        {
-            char[] chars = new char[(int) file.length()];
-            reader.read(chars);
-            APIkey_OPW = new String(chars);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
         //Thread description where I send a request and get JSON-response
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-
 
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request
@@ -71,11 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        Thread thread = new Thread(runnable);
 
-        //Start thread;
-        thread.start();
-
+/*
         try {
             Thread.sleep(10000);
         } catch (InterruptedException e) {
@@ -84,18 +70,28 @@ public class MainActivity extends AppCompatActivity {
 
         GsonParser parser = new GsonParser();
         Root root = parser.parse_current_weather(response);
+*/
 
+        save_APIkey = findViewById(R.id.save_APIkey);
+        userAPIkey = findViewById(R.id.userAPIkey);
 
-        get_owm_forecast = findViewById(R.id.get_owm_forecast);
-        view_forecast = findViewById(R.id.view_forecast);
-
-        get_owm_forecast.setOnClickListener(new View.OnClickListener() {
+        save_APIkey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    APIkey_OPW = userAPIkey.toString();
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
 
-                view_forecast.setText(response);
             }
         });
+
+        Thread thread = new Thread(runnable);
+
+        //Start thread;
+        thread.start();
+
 
     }
 }
