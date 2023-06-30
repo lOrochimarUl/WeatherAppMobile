@@ -2,6 +2,7 @@ package com.example.forecastweatherapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(this, GetApiActivity.class);
+        startActivity(intent);
+
 
         //Thread description where I send a request and get JSON-response
         Runnable runnable = new Runnable() {
@@ -72,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
         Root root = parser.parse_current_weather(response);
 */
 
-        save_APIkey = findViewById(R.id.save_APIkey);
-        userAPIkey = findViewById(R.id.userAPIkey);
 
         save_APIkey.setOnClickListener(new View.OnClickListener() {
             @Override
