@@ -3,11 +3,13 @@ package com.example.forecastweatherapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.database.sqlite.SQLiteDatabase;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,8 +44,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SQLiteDatabase db = getBaseContext().openOrCreateDatabase("app.db", MODE_PRIVATE, null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS info (api_key TEXT)");
+
         Intent intent = new Intent(this, GetApiActivity.class);
-        startActivity(intent);
+            startActivity(intent);
+
 
 
         //Thread description where I send a request and get JSON-response
@@ -76,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         Root root = parser.parse_current_weather(response);
 */
 
-
+/*
         save_APIkey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+*/
         Thread thread = new Thread(runnable);
 
         //Start thread;
